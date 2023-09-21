@@ -11,7 +11,7 @@ Author URI: https://github.com/Melksedeque
 // Define o caminho para a pasta de logs
 $logPath = plugin_dir_path(__FILE__) . 'logs/';
 
-// Certifica-se de que a pasta de logs exista
+// Verifica se a pasta de logs exista
 if (!file_exists($logPath)) {
     mkdir($logPath, 0755, true);
 }
@@ -43,7 +43,7 @@ add_action('gerar_xml_medicamentos_evento', 'gerar_xml_medicamentos');
 // }
 
 // Adiciona o intervalo personalizado aos cron schedules disponíveis
-add_filter('cron_schedules', 'definir_intervalo_cron');
+// add_filter('cron_schedules', 'definir_intervalo_cron');
 
 function gerar_xml_medicamentos() {
     try {
@@ -66,6 +66,7 @@ function gerar_xml_medicamentos() {
             // Verifica status do estoque para definir se o medicamento será anunciado na Preço Medicamentos
             $status_estoque = $product->get_stock_status();
             $preco = ($status_estoque === 'instock') ? $product->get_price() : 0;
+            $estoque = ($status_estoque === 'instock') ? "S" : "N";
 
             $productArray = json_decode($product, true);
             $gtin = '';
@@ -81,11 +82,12 @@ function gerar_xml_medicamentos() {
 
             // Adiciona medicamentos ao XML com suas tags internas
             $medicamento = $xml->addChild('medicamento');
-            $medicamento->addChild('ean', $gtin);
-            $medicamento->addChild('titulo', get_the_title());
+            $medicamento->addChild('id', get_the_ID());
+            $medicamento->addChild('nome', strip_tags(get_the_title()));
             $medicamento->addChild('preco', $preco);
+            $medicamento->addChild('ean', $gtin);
             $medicamento->addChild('link', get_permalink());
-            $medicamento->addChild('status', $status_estoque);
+            $medicamento->addChild('estoque', $estoque);
         }
 
         // Salva XML na pasta xml na raiz do public_html dentro da pasta xml ABSPATH traz a public_html
