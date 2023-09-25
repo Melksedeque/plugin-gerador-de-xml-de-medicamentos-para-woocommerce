@@ -1,7 +1,7 @@
 <?php
 /*
-Plugin Name: XML personalizado para Preço Medicamentos
-Description: Um plugin personalizado para gerar um XML com informações de produtos do WooCommerce para anunciar na Preço Medicamentos.
+Plugin Name: XML personalizado dos Medicamentos
+Description: Um plugin personalizado para gerar um XML com informações de produtos do WooCommerce para anunciar em plataformas de busca de medicamentos.
 Version: 1.0
 Author: Melksedeque Silva
 Author email: freelancer@melksedeque.com.br
@@ -57,13 +57,13 @@ function gerar_xml_medicamentos() {
         $products = new WP_Query($args);
 
         // Inicia a tag XML
-        $xml = new SimpleXMLElement('<aliria></aliria>');
+        $xml = new SimpleXMLElement('<empresa></empresa>');
 
         while ($products->have_posts()) {
             $products->the_post();
             $product = wc_get_product(get_the_ID());
 
-            // Verifica status do estoque para definir se o medicamento será anunciado na Preço Medicamentos
+            // Verifica status do estoque para definir se o medicamento será anunciado
             $status_estoque = $product->get_stock_status();
             $preco = ($status_estoque === 'instock') ? $product->get_price() : 0;
             $estoque = ($status_estoque === 'instock') ? "S" : "N";
@@ -91,7 +91,7 @@ function gerar_xml_medicamentos() {
         }
 
         // Salva XML na pasta xml na raiz do public_html dentro da pasta xml ABSPATH traz a public_html
-        $xmlFilePath = ABSPATH . '/xml/aliria_medicamentos.xml';
+        $xmlFilePath = ABSPATH . '/xml/nome_empresa.xml';
 
         if ($xml->asXML($xmlFilePath)) {
             echo 'XML gerado com sucesso!<br>';
@@ -100,7 +100,7 @@ function gerar_xml_medicamentos() {
         }
     } catch (Exception $e) {
         // Captura exceções e registra mensagens de erro
-        error_log('Erro no plugin XML Preço Medicamentos: ' . $e->getMessage(), 3, $logPath . 'plugin_errors.log');
+        error_log('Erro no plugin XML: ' . $e->getMessage(), 3, $logPath . 'plugin_errors.log');
     }
 }
 
@@ -109,7 +109,7 @@ add_action('init', function () {
     // Verifica se o parâmetro GET 'direct' existe e se o valor dele é 'true'
     if (isset($_GET['direct']) && $_GET['direct'] === 'true') {
         gerar_xml_medicamentos();
-        header("Location: https://eualiria.com.br/xml/aliria_medicamentos.xml");
+        header("Location: https://www.seusite.com/xml/nome_empresa.xml");
         exit;
     }
 });
