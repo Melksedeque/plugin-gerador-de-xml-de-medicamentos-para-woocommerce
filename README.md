@@ -1,4 +1,4 @@
-# Plugin WordPress: XML Personalizado para Preço Medicamentos
+# Plugin WordPress: XML Personalizado para plataformas de busca de medicamentos
 
 Este é um plugin WordPress personalizado desenvolvido para gerar um arquivo XML contendo informações de produtos do WooCommerce. O objetivo é criar um feed de produtos que pode ser usado para anunciar medicamentos em plataformas como Cliquefarma, Consulta Remédios, Preço Medicamentos, Farma Index ou em qualquer outro lugar onde um feed XML seja necessário.
 
